@@ -1,44 +1,46 @@
-// src/components/Navbar.jsx
 import { Link } from "react-router-dom";
 
-export default function Navbar({ isAuthed, user, onLogout }) {
+export default function Navbar() {
   return (
-    <div className="w-full border-b bg-white/80 backdrop-blur sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold">
-          AutoLMS
+    <nav className="bg-gray-900 text-white px-6 py-4 shadow-lg">
+      <div className="max-w-6xl mx-auto flex justify-between items-center">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold">
+          LMS
         </Link>
-        <nav className="flex items-center gap-4 text-sm">
-          <Link className="hover:underline" to="/courses">
+
+        {/* Nav Links */}
+        <div className="space-x-6 hidden md:flex">
+          <Link to="/" className="hover:text-yellow-400">
+            Home
+          </Link>
+          <Link to="/courses" className="hover:text-yellow-400">
             Courses
           </Link>
-          {isAuthed && (
-            <Link className="hover:underline" to="/dashboard">
-              Dashboard
-            </Link>
-          )}
-          {!isAuthed ? (
-            <>
-              <Link className="px-3 py-1 rounded-xl border" to="/login">
-                Login
-              </Link>
-              <Link
-                className="px-3 py-1 rounded-xl bg-black text-white"
-                to="/register"
-              >
-                Sign up
-              </Link>
-            </>
-          ) : (
-            <button
-              onClick={onLogout}
-              className="px-3 py-1 rounded-xl bg-black text-white"
-            >
-              Logout
-            </button>
-          )}
-        </nav>
+          <Link to="/about" className="hover:text-yellow-400">
+            About
+          </Link>
+          <Link to="/contact" className="hover:text-yellow-400">
+            Contact
+          </Link>
+        </div>
+
+        {/* Auth Buttons */}
+        <div className="space-x-4">
+          <Link
+            to="/login"
+            className="bg-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-600"
+          >
+            Login
+          </Link>
+          <Link
+            to="/register"
+            className="bg-gray-700 px-4 py-2 rounded-lg hover:bg-gray-600"
+          >
+            Register
+          </Link>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 }

@@ -1,9 +1,11 @@
 export default function Footer() {
   return (
-    <div className="border-t mt-12">
-      <div className="max-w-6xl mx-auto px-4 py-8 text-sm text-gray-500">
-        © {new Date().getFullYear()} AutoLMS — Frontend Phase 1
+    <footer className="bg-gray-900 text-gray-300 py-6 mt-10">
+      <div className="max-w-6xl mx-auto text-center">
+        <p>
+          &copy; {new Date().getFullYear()} LMS Project. All Rights Reserved.
+        </p>
       </div>
-    </div>
+    </footer>
   );
 }
