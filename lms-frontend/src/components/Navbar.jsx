@@ -1,6 +1,7 @@
+// src/components/Navbar.jsx
 import { Link } from "react-router-dom";
 
-export default function Navbar({ isAuthed, onLogout }) {
+export default function Navbar({ isAuthed, user, onLogout }) {
   return (
     <div className="w-full border-b bg-white/80 backdrop-blur sticky top-0 z-50">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">

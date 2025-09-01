@@ -1,11 +1,9 @@
 import Card from "../components/Card";
-import { DUMMY_COURSES } from "../data/dummyData";
+import { useCourseContext } from "../context/CourseContext";
 
 export default function Certificate() {
-  // Fallback: pick first course
-  const courseId = "ai101";
-  const course =
-    DUMMY_COURSES.find((c) => c.id === courseId) || DUMMY_COURSES[0];
+  const { courses } = useCourseContext();
+  const course = courses[0]; // fallback to first course
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">

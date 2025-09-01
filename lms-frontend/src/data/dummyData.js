@@ -1,43 +1,19 @@
-// src/data/dummyData.js
-// src/data/dummyData.js
-export const DUMMY_COURSES = [
-  {
-    id: "react",
-    title: "React for Beginners",
-    description: "Learn React from scratch and build interactive UIs.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80",
-  },
-  {
-    id: "tailwind",
-    title: "Tailwind CSS Mastery",
-    description: "Master utility-first CSS framework for rapid UI development.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=800&auto=format&fit=crop&q=80", // ✅ Tailwind CSS / UI design
-  },
-  {
-    id: "nodejs",
-    title: "Node.js Bootcamp",
-    description: "Learn backend development using Node.js and Express.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1518779578993-ec3579fee39f?w=800&auto=format&fit=crop&q=80",
-  },
-  {
-    id: "blockchain",
-    title: "Blockchain Basics",
-    description: "Understand blockchain technology and its applications.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&auto=format&fit=crop&q=80",
-  },
-  {
-    id: "ai",
-    title: "AI & Machine Learning",
-    description:
-      "Explore artificial intelligence and machine learning concepts.",
-    thumbnail:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&auto=format&fit=crop&q=80",
-  },
-];
+export const DUMMY_COURSES = Array.from({ length: 10 }, (_, i) => {
+  const courseNum = i + 1;
+  return {
+    id: `class${courseNum}`,
+    title: `Class ${courseNum}`,
+    thumbnail: `/assets/thumbnails/img${courseNum}.jpg`,
+    lessons: [
+      {
+        id: `lesson${courseNum}`,
+        title: `Lesson ${courseNum}`,
+        pdf: `/assets/pdfs/SM${courseNum}.pdf`,
+        video: `/assets/videos/SM${courseNum}.mp4`,
+      },
+    ],
+  };
+});
 
 export const DUMMY_QUIZZES = {
   "react-basics": {
@@ -58,5 +34,4 @@ export const DUMMY_QUIZZES = {
       },
     ],
   },
-  // add other quizzes as needed
 };

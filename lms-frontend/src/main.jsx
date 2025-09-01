@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import "./index.css"; // <-- Tailwind styles
+import "./index.css";
+import { CourseProvider } from "./context/CourseContext.jsx"; // import the context provider
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <CourseProvider>
+      <App />
+    </CourseProvider>
   </React.StrictMode>
 );

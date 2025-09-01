@@ -9,8 +9,7 @@ export default function Home() {
             Build. Learn. Earn. Govern.
           </h1>
           <p className="mt-4 text-gray-600">
-            A modern LMS with automation, Web3 certificates, and AI feedback —
-            this is the frontend-only Phase 1 with mocked data.
+            A modern LMS with automation, Web3 certificates, and AI feedback.
           </p>
           <div className="mt-6 flex gap-3">
             <Link

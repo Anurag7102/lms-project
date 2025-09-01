@@ -1,28 +1,26 @@
+// src/components/Card.jsx
 import { Link } from "react-router-dom";
 
 export default function Card({ course }) {
   return (
-    <div className="border rounded p-4 shadow hover:shadow-lg transition">
-      {/* Course Image */}
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition">
       <img
         src={course.thumbnail}
         alt={course.title}
-        className="w-full h-40 object-cover mb-4 rounded"
+        className="w-full h-40 object-cover"
       />
-
-      {/* Course Title */}
-      <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
-
-      {/* Course Description */}
-      <p className="text-gray-600 mb-4">{course.description}</p>
-
-      {/* Link to Course Details */}
-      <Link
-        to={`/courses/${course.id}`}
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        View Course
-      </Link>
+      <div className="p-4">
+        <h3 className="text-lg font-semibold">{course.title}</h3>
+        <p className="text-gray-600 text-sm mb-3">
+          {course.lessons.length} Lesson
+        </p>
+        <Link
+          to={`/courses/${course.id}`}
+          className="text-blue-600 font-medium hover:underline"
+        >
+          View Course
+        </Link>
+      </div>
     </div>
   );
 }

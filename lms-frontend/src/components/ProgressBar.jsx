@@ -1,3 +1,4 @@
+// src/components/ProgressBar.jsx
 export default function ProgressBar({ value }) {
   return (
     <div className="w-full h-2 bg-gray-200 rounded-full">

@@ -1,11 +1,14 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Card from "../components/Card";
-import { DUMMY_QUIZZES } from "../data/dummyData";
+import { useCourseContext } from "../context/CourseContext";
 
 export default function Quiz() {
   const { courseId, lessonId } = useParams();
-  const questions = DUMMY_QUIZZES[courseId]?.[lessonId] ?? [];
+  const { courses } = useCourseContext();
+  const questions =
+    courses.find((c) => c.id === courseId)?.quizzes?.[lessonId] || [];
+
   const [answers, setAnswers] = useState({});
   const [showResult, setShowResult] = useState(false);
   const [score, setScore] = useState(0);

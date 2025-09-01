@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { DUMMY_COURSES } from "../data/dummyData";
+import { useCourseContext } from "../context/CourseContext";
 import storage from "../utils/storage";
 
 export default function LessonDetail() {
   const { courseId, lessonId } = useParams();
-  const course = DUMMY_COURSES.find((c) => c.id === courseId);
+  const { courses } = useCourseContext();
+  const course = courses.find((c) => c.id === courseId);
   const lesson = course?.lessons.find((l) => l.id === lessonId);
   const navigate = useNavigate();
 
@@ -39,8 +40,7 @@ export default function LessonDetail() {
       </div>
       <h2 className="text-2xl font-semibold mt-4">{lesson.title}</h2>
       <p className="text-gray-600">
-        This is placeholder content for the lesson. Replace with markdown/video
-        later.
+        This is placeholder content for the lesson. Replace with actual content.
       </p>
       <div className="mt-6 flex gap-3">
         <button onClick={markComplete} className="px-4 py-2 rounded-xl border">

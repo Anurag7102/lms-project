@@ -1,3 +1,4 @@
+// src/hooks/useAuthState.js
 import { useState } from "react";
 import storage from "../utils/storage";
 
@@ -5,9 +6,9 @@ export default function useAuthState() {
   const [isAuthed, setIsAuthed] = useState(() => storage.get("authed", false));
   const [user, setUser] = useState(() => storage.get("user", null));
 
-  const login = (email) => {
+  const login = (email, isAdmin = false) => {
     setIsAuthed(true);
-    const u = { email, name: email.split("@")[0] };
+    const u = { email, name: email.split("@")[0], isAdmin };
     setUser(u);
     storage.set("authed", true);
     storage.set("user", u);
