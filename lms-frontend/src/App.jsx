@@ -1,36 +1,70 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+
+// Components
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+
+// Pages
 import Home from "./pages/Home";
 import Courses from "./pages/Courses";
-import CourseDetail from "./pages/CourseDetail"; // ✅ import course detail
-import About from "./pages/About";
-import Contact from "./pages/Contact";
+import CourseDetail from "./pages/CourseDetail";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import AddCourse from "./pages/AddCourse";
+import EditCourse from "./pages/EditCourse";
+import AddLesson from "./pages/AddLesson";
+import EditLesson from "./pages/EditLesson";
 
 function App() {
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+  const isLoggedIn = !!token;
+
   return (
     <Router>
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            {/* Main Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/courses" element={<Courses />} />
-            <Route path="/courses/:id" element={<CourseDetail />} />{" "}
-            {/* ✅ dynamic route for details */}
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            {/* Auth Routes */}
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
+      <Navbar />
+      <Routes>
+        {/* Public pages */}
+        <Route path="/" element={<Home />} />
+        <Route path="/courses" element={<Courses />} />
+        <Route path="/courses/:courseId" element={<CourseDetail />} />
+
+        {/* Auth */}
+        <Route
+          path="/login"
+          element={!isLoggedIn ? <Login /> : <Navigate to="/courses" />}
+        />
+        <Route
+          path="/register"
+          element={!isLoggedIn ? <Register /> : <Navigate to="/courses" />}
+        />
+
+        {/* Admin-only */}
+        {isLoggedIn && role === "admin" && (
+          <>
+            <Route path="/courses/add" element={<AddCourse />} />
+            <Route path="/courses/edit/:id" element={<EditCourse />} />
+            <Route
+              path="/courses/:courseId/lessons/add"
+              element={<AddLesson />}
+            />
+            <Route
+              path="/courses/:courseId/lessons/edit/:id"
+              element={<EditLesson />}
+            />
+          </>
+        )}
+
+        {/* Unknown route */}
+        <Route path="*" element={<Navigate to="/courses" />} />
+      </Routes>
+      <Footer />
     </Router>
   );
 }

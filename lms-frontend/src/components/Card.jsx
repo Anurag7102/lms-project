@@ -3,22 +3,28 @@ import { Link } from "react-router-dom";
 
 export default function Card({ course }) {
   return (
-    <div className="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition">
-      <img
-        src={course.thumbnail}
-        alt={course.title}
-        className="w-full h-40 object-cover"
-      />
+    <div className="rounded-2xl border bg-white shadow-sm hover:shadow-md overflow-hidden transition">
+      {/* Course Thumbnail */}
+      {course.image && (
+        <img
+          src={course.image} // backend-provided image URL
+          alt={course.title}
+          className="w-full h-40 object-cover"
+        />
+      )}
+
+      {/* Course Info */}
       <div className="p-4">
-        <h3 className="text-lg font-semibold">{course.title}</h3>
-        <p className="text-gray-600 text-sm mb-3">
-          {course.lessons.length} Lesson
-        </p>
+        <h3 className="text-lg font-semibold mb-2">{course.title}</h3>
+        {course.description && (
+          <p className="text-sm text-gray-600 mb-4">{course.description}</p>
+        )}
+
         <Link
-          to={`/courses/${course.id}`}
-          className="text-blue-600 font-medium hover:underline"
+          to={`/courses/${course._id}`}
+          className="inline-block px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700"
         >
-          View Course
+          Browse
         </Link>
       </div>
     </div>
