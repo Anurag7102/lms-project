@@ -2,19 +2,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Register({ setUser }) {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch("http://localhost:5000/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password }),
@@ -23,49 +23,66 @@ export default function Register() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message);
+        setError(data.message || "Registration failed");
         return;
       }
 
-      alert("Registered successfully! Please login.");
-      navigate("/login");
+      // After registration, auto-login
+      const loginRes = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const loginData = await loginRes.json();
+      if (!loginRes.ok) {
+        setError(loginData.message || "Auto-login failed");
+        return;
+      }
+
+      localStorage.setItem("token", loginData.token);
+      localStorage.setItem("user", JSON.stringify(loginData.user));
+
+      setUser(loginData.user);
+      navigate("/courses");
     } catch (err) {
-      setError("Server error, try again later");
+      console.error(err);
+      setError("Server error");
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-20 p-6 border rounded-xl shadow">
+    <div className="max-w-md mx-auto mt-10 p-6 border rounded shadow">
       <h2 className="text-2xl font-bold mb-4">Register</h2>
-      {error && <p className="text-red-600 mb-4">{error}</p>}
+      {error && <p className="text-red-500 mb-2">{error}</p>}
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="text"
-          placeholder="Full Name"
+          placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-2 border rounded"
           required
+          className="w-full border px-3 py-2 rounded"
         />
         <input
           type="email"
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-2 border rounded"
           required
+          className="w-full border px-3 py-2 rounded"
         />
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 border rounded"
           required
+          className="w-full border px-3 py-2 rounded"
         />
         <button
           type="submit"
-          className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700"
+          className="w-full bg-gray-700 text-white py-2 rounded hover:bg-gray-600"
         >
           Register
         </button>

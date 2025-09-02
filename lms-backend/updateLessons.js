@@ -1,29 +1,43 @@
-// updateLessonsAudio.js
-const { MongoClient, ObjectId } = require("mongodb");
+// updateLessonsFilenames.js
+const { MongoClient } = require("mongodb");
 
 const uri = "mongodb://127.0.0.1:27017"; // your MongoDB URI
-const dbName = "lms"; // your DB name
+const dbName = "lms"; // your database name
 
-async function addAudioToLessons() {
+async function updateLessonFilenames() {
   const client = new MongoClient(uri);
+
   try {
     await client.connect();
     const db = client.db(dbName);
-    const lessons = db.collection("lessons");
+    const lessonsCollection = db.collection("lessons");
 
-    // fetch all lessons sorted by _id (or any order you want)
-    const allLessons = await lessons.find({}).sort({ _id: 1 }).toArray();
+    // Fetch all lessons
+    const lessons = await lessonsCollection.find({}).toArray();
 
-    for (let i = 0; i < allLessons.length; i++) {
-      const lesson = allLessons[i];
-      const audioFile = `/audios/SM ${i + 1}.mp4`; // sequential audio file
+    for (let lesson of lessons) {
+      const updates = {};
 
-      await lessons.updateOne(
-        { _id: lesson._id },
-        { $set: { audio: audioFile } }
-      );
+      // If video exists, strip the folder path, keep only filename
+      if (lesson.video) {
+        updates.video = lesson.video.split("/").pop();
+      }
 
-      console.log(`Updated lesson: ${lesson.title} with audio: ${audioFile}`);
+      // If audio exists, strip the folder path, keep only filename
+      if (lesson.audio) {
+        updates.audio = lesson.audio.split("/").pop();
+      }
+
+      // Update the lesson
+      if (Object.keys(updates).length > 0) {
+        await lessonsCollection.updateOne(
+          { _id: lesson._id },
+          { $set: updates }
+        );
+        console.log(
+          `Updated lesson "${lesson.title}" -> video: ${updates.video}, audio: ${updates.audio}`
+        );
+      }
     }
 
     console.log("All lessons updated successfully!");
@@ -34,4 +48,4 @@ async function addAudioToLessons() {
   }
 }
 
-addAudioToLessons();
+updateLessonFilenames();

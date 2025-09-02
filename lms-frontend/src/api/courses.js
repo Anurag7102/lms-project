@@ -5,7 +5,7 @@ const BASE_URL = "http://localhost:5000/api/courses";
 export const getCourses = async () => {
   try {
     const res = await fetch(BASE_URL);
-    if (!res.ok) throw new Error("Failed to fetch courses");
+    if (!res.ok) throw new Error(`Failed to fetch courses: ${res.status}`);
     const data = await res.json();
     return Array.isArray(data) ? data : [];
   } catch (err) {
@@ -16,10 +16,10 @@ export const getCourses = async () => {
 
 // Fetch single course
 export const getCourse = async (id) => {
+  if (!id) throw new Error("Course ID is required");
   try {
-    if (!id) throw new Error("Course ID is required");
     const res = await fetch(`${BASE_URL}/${id}`);
-    if (!res.ok) throw new Error("Course not found");
+    if (!res.ok) throw new Error(`Course not found: ${res.status}`);
     return await res.json();
   } catch (err) {
     console.error("Error in getCourse:", err);
@@ -29,22 +29,35 @@ export const getCourse = async (id) => {
 
 // Add a course
 export const addCourse = async (courseData) => {
-  const res = await fetch(BASE_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(courseData),
-  });
-  if (!res.ok) throw new Error("Failed to add course");
-  return res.json();
+  if (!courseData) throw new Error("Course data is required");
+  try {
+    const res = await fetch(BASE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(courseData),
+    });
+    if (!res.ok) throw new Error(`Failed to add course: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error("Error in addCourse:", err);
+    throw err;
+  }
 };
 
 // Edit a course
 export const editCourse = async (id, updatedData) => {
-  const res = await fetch(`${BASE_URL}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(updatedData),
-  });
-  if (!res.ok) throw new Error("Failed to edit course");
-  return res.json();
+  if (!id) throw new Error("Course ID is required");
+  if (!updatedData) throw new Error("Updated data is required");
+  try {
+    const res = await fetch(`${BASE_URL}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    });
+    if (!res.ok) throw new Error(`Failed to edit course: ${res.status}`);
+    return await res.json();
+  } catch (err) {
+    console.error("Error in editCourse:", err);
+    throw err;
+  }
 };

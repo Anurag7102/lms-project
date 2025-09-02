@@ -1,4 +1,5 @@
 // src/App.jsx
+import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -20,51 +21,77 @@ import AddCourse from "./pages/AddCourse";
 import EditCourse from "./pages/EditCourse";
 import AddLesson from "./pages/AddLesson";
 import EditLesson from "./pages/EditLesson";
+import AdminUsers from "./pages/AdminUsers";
 
 function App() {
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
-  const isLoggedIn = !!token;
+  const [user, setUser] = useState(null);
+
+  // On mount, get user from localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const isLoggedIn = !!user;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUser(null);
+  };
 
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        {/* Public pages */}
-        <Route path="/" element={<Home />} />
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/courses/:courseId" element={<CourseDetail />} />
+      <div className="flex flex-col min-h-screen">
+        {/* pass setUser too so Navbar can react immediately */}
+        <Navbar user={user} setUser={setUser} onLogout={handleLogout} />
 
-        {/* Auth */}
-        <Route
-          path="/login"
-          element={!isLoggedIn ? <Login /> : <Navigate to="/courses" />}
-        />
-        <Route
-          path="/register"
-          element={!isLoggedIn ? <Register /> : <Navigate to="/courses" />}
-        />
+        <main className="flex-grow">
+          <Routes>
+            {/* Public */}
+            <Route path="/" element={<Home />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/courses/:courseId" element={<CourseDetail />} />
 
-        {/* Admin-only */}
-        {isLoggedIn && role === "admin" && (
-          <>
-            <Route path="/courses/add" element={<AddCourse />} />
-            <Route path="/courses/edit/:id" element={<EditCourse />} />
+            {/* Auth */}
             <Route
-              path="/courses/:courseId/lessons/add"
-              element={<AddLesson />}
+              path="/login"
+              element={
+                !isLoggedIn ? (
+                  <Login setUser={setUser} />
+                ) : (
+                  <Navigate to="/courses" />
+                )
+              }
             />
-            <Route
-              path="/courses/:courseId/lessons/edit/:id"
-              element={<EditLesson />}
-            />
-          </>
-        )}
+            <Route path="/register" element={<Register />} />
 
-        {/* Unknown route */}
-        <Route path="*" element={<Navigate to="/courses" />} />
-      </Routes>
-      <Footer />
+            {/* Admin-only */}
+            {isLoggedIn && user?.role === "admin" && (
+              <>
+                <Route path="/courses/add" element={<AddCourse />} />
+                <Route path="/courses/edit/:id" element={<EditCourse />} />
+                <Route
+                  path="/courses/:courseId/lessons/add"
+                  element={<AddLesson />}
+                />
+                <Route
+                  path="/courses/:courseId/lessons/edit/:id"
+                  element={<EditLesson />}
+                />
+                <Route path="/admin/users" element={<AdminUsers />} />
+              </>
+            )}
+
+            {/* Unknown */}
+            <Route path="*" element={<Navigate to="/courses" />} />
+          </Routes>
+        </main>
+
+        <Footer />
+      </div>
     </Router>
   );
 }
